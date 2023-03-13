@@ -132,6 +132,7 @@ function App() {
               grammar={grammar}
             />
             <GoButton
+              disabled={loadingTransformSentence}
               onClick={() =>
                 transformSentence(sentence, selectedSentenceType?.value)
               }

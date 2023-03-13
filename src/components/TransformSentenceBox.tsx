@@ -16,7 +16,11 @@ export const TransformSentenceBox: React.FC<TransformSentenceBoxProps> = (
       title="Into:"
       titlePadding="0 1rem"
       titleRightComponent={
-        <Select {...props.select} loading={props.loadingSelect} />
+        <Select
+          {...props.select}
+          loading={props.loadingSelect}
+          disabled={props.loading}
+        />
       }
       value={props.value}
       loading={props.loading}

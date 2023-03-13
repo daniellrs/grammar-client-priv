@@ -7,6 +7,7 @@ export interface SelectProps extends Pick<Props, "value" | "options"> {
   options?: ISelectOption[];
   onChange?: (value: ISelectOption) => void;
   loading?: boolean;
+  disabled?: boolean;
 }
 
 const Container = styled.div`
@@ -61,6 +62,7 @@ export const Select: React.FC<SelectProps> = (props) => {
         <ReactSelect
           value={props.value}
           options={props.options}
+          isDisabled={props.disabled}
           onChange={(value) => props.onChange?.(value as ISelectOption)}
         />
       )}

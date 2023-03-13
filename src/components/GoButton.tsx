@@ -4,6 +4,7 @@ import { smallScreenWidth } from "../lib/utils";
 
 interface GoButtonProps {
   onClick?: () => void;
+  disabled?: boolean;
 }
 
 const Container = styled.div`
@@ -19,11 +20,12 @@ const Container = styled.div`
   }
 `;
 
-const Button = styled.button`
+const Button = styled.button<{ disabled?: boolean }>`
   display: flex;
   justify-content: center;
   align-items: center;
-  background: var(--primary-color);
+  background: ${(props) =>
+    props.disabled ? "var(--color-grey)" : "var(--primary-color)"};
   border: 0.45rem solid var(--tertiary-color);
   outline: none;
   position: absolute;
@@ -31,10 +33,11 @@ const Button = styled.button`
   border-radius: 50%;
   width: 4rem;
   height: 4rem;
-  cursor: pointer;
+  cursor: ${(props) => (props.disabled ? "initial" : "pointer")};
   transition: all 0.1s;
   &:active {
-    background: var(--primary-color-darker);
+    background: ${(props) =>
+      props.disabled ? "var(--color-grey)" : "var(--primary-color-darker)"};
   }
   & .arrow-down {
     display: none;
@@ -53,7 +56,7 @@ const Button = styled.button`
 export const GoButton: React.FC<GoButtonProps> = (props) => {
   return (
     <Container>
-      <Button onClick={props.onClick}>
+      <Button disabled={props.disabled} onClick={props.onClick}>
         <BsArrowRight className="arrow-right" size={18} />
         <BsArrowDown className="arrow-down" size={18} />
       </Button>
