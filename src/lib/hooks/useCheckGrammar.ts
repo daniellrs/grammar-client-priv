@@ -16,5 +16,5 @@ export const useCheckGrammar = () => {
     }
   };
 
-  return { loading, grammar, checkGrammar };
+  return { loading, grammar, setGrammar, checkGrammar };
 };

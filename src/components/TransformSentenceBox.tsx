@@ -2,15 +2,9 @@ import styled from "styled-components";
 import { Select, SelectProps } from "./Select";
 import { SentenceContainer } from "./SentenceContainer";
 
-interface IAction {
-  label?: string;
-  onClick?: () => void;
-}
-
 interface TransformSentenceBoxProps {
   select: SelectProps;
   loadingSelect?: boolean;
-  action: IAction;
   loading?: boolean;
   value?: string;
 }
@@ -42,10 +36,6 @@ export const TransformSentenceBox: React.FC<TransformSentenceBoxProps> = (
       value={props.value}
       loading={props.loading}
       disabled
-    >
-      <ActionButton onClick={props.action.onClick}>
-        {props.action.label}
-      </ActionButton>
-    </SentenceContainer>
+    ></SentenceContainer>
   );
 };

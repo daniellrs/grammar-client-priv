@@ -1,8 +1,8 @@
 import styled from "styled-components";
-import { BsArrowLeft, BsArrowUp } from "react-icons/bs";
+import { BsArrowRight, BsArrowDown } from "react-icons/bs";
 import { smallScreenWidth } from "../lib/utils";
 
-interface InvertButtonProps {
+interface GoButtonProps {
   onClick?: () => void;
 }
 
@@ -36,28 +36,26 @@ const Button = styled.button`
   &:active {
     background: var(--primary-color-darker);
   }
-  & .arrow-up {
+  & .arrow-down {
     display: none;
   }
   @media (max-width: ${smallScreenWidth}px) {
     top: unset;
-    width: 3.5rem;
-    height: 3.5rem;
-    & .arrow-left {
+    & .arrow-right {
       display: none;
     }
-    & .arrow-up {
+    & .arrow-down {
       display: unset;
     }
   }
 `;
 
-export const InvertButton: React.FC<InvertButtonProps> = (props) => {
+export const GoButton: React.FC<GoButtonProps> = (props) => {
   return (
     <Container>
       <Button onClick={props.onClick}>
-        <BsArrowLeft className="arrow-left" size={18} />
-        <BsArrowUp className="arrow-up" size={18} />
+        <BsArrowRight className="arrow-right" size={18} />
+        <BsArrowDown className="arrow-down" size={18} />
       </Button>
     </Container>
   );

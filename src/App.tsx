@@ -3,7 +3,7 @@ import { SkeletonTheme } from "react-loading-skeleton";
 import styled from "styled-components";
 import { Footer } from "./components/Footer";
 import { History } from "./components/History";
-import { InvertButton } from "./components/InvertButton";
+import { GoButton } from "./components/GoButton";
 import { SentenceBox } from "./components/SentenceBox";
 import { TransformSentenceBox } from "./components/TransformSentenceBox";
 import { useHistory } from "./lib/hooks/useHistory";
@@ -12,6 +12,8 @@ import { useSentenceTypes } from "./lib/hooks/useSentenceTypes";
 import { useTransformSentence } from "./lib/hooks/useTransformSentence";
 import { IHistory } from "./lib/types";
 import { smallScreenWidth } from "./lib/utils";
+import { usePrevious } from "./lib/hooks/usePrevious";
+import { useCheckGrammar } from "./lib/hooks/useCheckGrammar";
 
 const Container = styled.div`
   display: flex;
@@ -35,6 +37,8 @@ const SectionFlex = styled.section`
 
 function App() {
   const isFirstSentenceTransformed = React.useRef<boolean>(false);
+  const isFirstSentenceChecked = React.useRef<boolean>(false);
+
   const { history, saveToHistory, loadHistory } = useHistory();
 
   const {
@@ -59,13 +63,17 @@ function App() {
     transformSentence,
   } = useTransformSentence({ saveToHistory });
 
-  const transformedSentenceToSentence = () => {
-    if (!transformedSentence) return;
-    setSentence(transformedSentence);
-    setTransformedSentence("");
-  };
+  const {
+    loading: loadingCheckGrammar,
+    grammar,
+    checkGrammar,
+    setGrammar,
+  } = useCheckGrammar();
+
+  const previousSentence = usePrevious(sentence);
 
   const onSelectHistory = (h: IHistory) => {
+    setGrammar(undefined);
     setSelectedSentenceType(
       optionsSentenceTypes.find((t) => t.value === h.type)
     );
@@ -83,6 +91,17 @@ function App() {
     isFirstSentenceTransformed.current = true;
     transformSentence(sentence, selectedSentenceType.value);
   };
+
+  const onSentenceBlur = () => {
+    if (!sentence || sentence === previousSentence) return;
+    checkGrammar(sentence);
+  };
+
+  React.useEffect(() => {
+    if (sentence === previousSentence || isFirstSentenceChecked.current) return;
+    isFirstSentenceChecked.current = true;
+    checkGrammar(sentence);
+  }, [sentence, previousSentence]);
 
   React.useEffect(() => {
     getSentenceTypes();
@@ -107,9 +126,16 @@ function App() {
             <SentenceBox
               value={sentence}
               onChange={setSentence}
+              onBlur={onSentenceBlur}
               loading={loadingSentence}
+              loadingCheckGrammar={loadingCheckGrammar}
+              grammar={grammar}
             />
-            <InvertButton onClick={transformedSentenceToSentence} />
+            <GoButton
+              onClick={() =>
+                transformSentence(sentence, selectedSentenceType?.value)
+              }
+            />
             <TransformSentenceBox
               value={transformedSentence}
               loading={loadingTransformSentence}
@@ -120,12 +146,6 @@ function App() {
                 onChange: (newVal) => {
                   setSelectedSentenceType(newVal);
                   transformSentence(sentence, newVal.value);
-                },
-              }}
-              action={{
-                label: "Rewrite it!",
-                onClick: () => {
-                  transformSentence(sentence, selectedSentenceType?.value);
                 },
               }}
             />

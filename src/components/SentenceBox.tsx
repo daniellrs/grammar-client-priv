@@ -1,13 +1,15 @@
 import React from "react";
 import styled from "styled-components";
-import { useCheckGrammar } from "../lib/hooks/useCheckGrammar";
-import { usePrevious } from "../lib/hooks/usePrevious";
+import { ICheckGrammarResponse } from "../lib/api/types";
 import { SentenceContainer } from "./SentenceContainer";
 
 interface SentenceBoxProps {
   loading?: boolean;
   value?: string;
   onChange?: (value: string) => void;
+  onBlur?: () => void;
+  loadingCheckGrammar?: boolean;
+  grammar?: ICheckGrammarResponse;
 }
 
 const GrammarContainer = styled.div`
@@ -69,26 +71,6 @@ const GrammarLoadingDot = styled.div<{ delay?: number }>`
 `;
 
 export const SentenceBox: React.FC<SentenceBoxProps> = (props) => {
-  const isFirstSentenceChecked = React.useRef<boolean>(false);
-
-  const previousValue = usePrevious(props.value);
-  const {
-    loading: loadingCheckGrammar,
-    grammar,
-    checkGrammar,
-  } = useCheckGrammar();
-
-  const onBlur = () => {
-    if (!props.value || props.value === previousValue) return;
-    checkGrammar(props.value);
-  };
-
-  React.useEffect(() => {
-    if (props.value === previousValue || isFirstSentenceChecked.current) return;
-    checkGrammar(props.value);
-    isFirstSentenceChecked.current = true;
-  }, [props.value, previousValue]);
-
   return (
     <SentenceContainer
       title="Your sentence"
@@ -96,14 +78,14 @@ export const SentenceBox: React.FC<SentenceBoxProps> = (props) => {
       value={props.value}
       onChange={props.onChange}
       loading={props.loading}
-      onBlur={onBlur}
+      onBlur={props.onBlur}
     >
       <GrammarContainer>
         <GrammarDot
-          correct={grammar?.correct}
-          isLoading={loadingCheckGrammar}
+          correct={props.grammar?.correct}
+          isLoading={props.loadingCheckGrammar}
         />
-        {loadingCheckGrammar ? (
+        {props.loadingCheckGrammar ? (
           <GrammarLoadingDotContainer>
             <GrammarLoadingDot />
             <GrammarLoadingDot delay={0.4} />
@@ -111,9 +93,9 @@ export const SentenceBox: React.FC<SentenceBoxProps> = (props) => {
           </GrammarLoadingDotContainer>
         ) : (
           <GrammarText>
-            {grammar?.correct
+            {props.grammar?.correct
               ? "Your sentence is gramatically correct"
-              : grammar?.errors}
+              : props.grammar?.errors}
           </GrammarText>
         )}
       </GrammarContainer>
