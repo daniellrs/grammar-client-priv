@@ -51,7 +51,6 @@ const Title = styled.div`
 const TextArea = styled.textarea`
   resize: none;
   flex: 1;
-  border-radius: var(--border-radius);
   background: inherit;
   border: none;
   outline: none;
