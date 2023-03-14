@@ -43,6 +43,8 @@ const Button = styled.button<{ disabled?: boolean }>`
     display: none;
   }
   @media (max-width: ${smallScreenWidth}px) {
+    width: 6rem;
+    border-radius: var(--border-radius-x2);
     top: unset;
     & .arrow-right {
       display: none;

@@ -79,6 +79,7 @@ export const SentenceBox: React.FC<SentenceBoxProps> = (props) => {
       onChange={props.onChange}
       loading={props.loading}
       onBlur={props.onBlur}
+      customClass="sentence"
     >
       <GrammarContainer>
         <GrammarDot

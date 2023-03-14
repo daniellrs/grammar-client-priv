@@ -1,5 +1,6 @@
 import Skeleton from "react-loading-skeleton";
 import styled from "styled-components";
+import { smallScreenWidth } from "../lib/utils";
 
 interface SentenceContainerProps {
   title?: string;
@@ -12,6 +13,7 @@ interface SentenceContainerProps {
   disabled?: boolean;
   placeholder?: string;
   children?: React.ReactNode;
+  customClass?: string;
 }
 
 const Container = styled.div`
@@ -23,6 +25,15 @@ const Container = styled.div`
   height: 22rem;
   background: var(--secondary-color);
   border-radius: var(--border-radius);
+
+  @media (max-width: ${smallScreenWidth}px) {
+    &.sentence {
+      padding-bottom: 2.5rem;
+    }
+    &.transform-sentence {
+      padding-top: 2rem;
+    }
+  }
 `;
 
 const TitleContainer = styled.div<{ padding?: string }>`
@@ -56,7 +67,7 @@ const LoadingTextSkeletonContainer = styled.div`
 
 export const SentenceContainer: React.FC<SentenceContainerProps> = (props) => {
   return (
-    <Container>
+    <Container className={props.customClass}>
       <TitleContainer padding={props.titlePadding}>
         <Title>{props.title}</Title>
         {props.titleRightComponent}

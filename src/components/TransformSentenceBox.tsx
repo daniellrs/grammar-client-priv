@@ -24,6 +24,7 @@ export const TransformSentenceBox: React.FC<TransformSentenceBoxProps> = (
       }
       value={props.value}
       loading={props.loading}
+      customClass="transform-sentence"
       disabled
     ></SentenceContainer>
   );
