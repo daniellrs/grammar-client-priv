@@ -3,7 +3,7 @@ import { api } from "../api";
 import { ICheckGrammarResponse } from "../api/types";
 
 export const useCheckGrammar = () => {
-  const [loading, setLoading] = React.useState<boolean>(true);
+  const [loading, setLoading] = React.useState<boolean>(false);
   const [grammar, setGrammar] = React.useState<ICheckGrammarResponse>();
 
   const checkGrammar = async (sentence: string) => {

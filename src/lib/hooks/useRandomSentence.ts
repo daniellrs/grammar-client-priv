@@ -2,7 +2,7 @@ import React from "react";
 import { api } from "../api";
 
 export const useRandomSentence = () => {
-  const [loading, setLoading] = React.useState<boolean>(true);
+  const [loading, setLoading] = React.useState<boolean>(false);
   const [sentence, setSentence] = React.useState<string>();
 
   const getRandomSentence = async () => {

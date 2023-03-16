@@ -19,8 +19,11 @@ export const useHistory = () => {
   };
 
   const loadHistory = () => {
-    const history = JSON.parse(localStorage.getItem("history") || "[]");
+    const history: IHistory[] = JSON.parse(
+      localStorage.getItem("history") || "[]"
+    );
     setHistory(history);
+    return history;
   };
 
   return { history, saveToHistory, loadHistory };

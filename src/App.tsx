@@ -97,17 +97,35 @@ function App() {
     checkGrammar(sentence);
   };
 
+  const fetchInitialContent = async () => {
+    const history = loadHistory();
+
+    if (history.length) {
+      const { sentence, transformedSentence } = history[0];
+      setSentence(sentence);
+      setTransformedSentence(transformedSentence);
+      isFirstSentenceChecked.current = true;
+      isFirstSentenceTransformed.current = true;
+    } else {
+      getRandomSentence();
+    }
+
+    const sentenceTypes = await getSentenceTypes();
+    if (history.length) {
+      const { type } = history[0];
+      setSelectedSentenceType(sentenceTypes.find((s) => s.value === type));
+    }
+  };
+
+  React.useEffect(() => {
+    fetchInitialContent();
+  }, []);
+
   React.useEffect(() => {
     if (sentence === previousSentence || isFirstSentenceChecked.current) return;
     isFirstSentenceChecked.current = true;
     checkGrammar(sentence);
   }, [sentence, previousSentence]);
-
-  React.useEffect(() => {
-    getSentenceTypes();
-    getRandomSentence();
-    loadHistory();
-  }, []);
 
   React.useEffect(() => {
     transformFirstSentence();

@@ -3,7 +3,7 @@ import { api } from "../api";
 import { ISelectOption } from "../types";
 
 export const useSentenceTypes = () => {
-  const [loading, setLoading] = React.useState<boolean>(true);
+  const [loading, setLoading] = React.useState<boolean>(false);
   const [selected, setSelected] = React.useState<ISelectOption>();
   const [options, setOptions] = React.useState<ISelectOption[]>([]);
 
@@ -14,6 +14,7 @@ export const useSentenceTypes = () => {
       const typeOptions = response.types.map((t) => ({ value: t, label: t }));
       setSelected(typeOptions.find((t) => t.value === "Joke"));
       setOptions(typeOptions);
+      return typeOptions;
     } finally {
       setLoading(false);
     }
