@@ -1,34 +1,36 @@
 import md5 from "md5";
 import { api } from ".";
 
-let currentDate: string;
+let serverLocalDiffMs: number;
 
-const fetchCurrentDate = async () => {
-  try {
-    currentDate = (await api.currentDate()).date;
-  } catch (error) {
-    setTimeout(fetchCurrentDate, 500);
-  }
-};
+const fetchServerDate = () =>
+  setTimeout(async () => {
+    if (typeof serverLocalDiffMs === "number") return;
+    const serverDate = new Date((await api.currentDate()).date).getTime();
+    const localDate = new Date().getTime();
+    serverLocalDiffMs = localDate - serverDate;
+  }, 0);
 
 const getCurrentDate = (): Promise<string> =>
   new Promise((resolve) => {
-    if (!currentDate) setTimeout(() => resolve(getCurrentDate()), 10);
+    if (typeof serverLocalDiffMs !== "number")
+      setTimeout(() => resolve(getCurrentDate()), 50);
     else {
-      resolve(currentDate);
-      return currentDate;
+      const date = new Date();
+      date.setMilliseconds(date.getMilliseconds() - serverLocalDiffMs);
+      resolve(date.toISOString());
+      return date.toISOString();
     }
   });
 
-const generateDummyBearer = (isoDate: string) => {
+export const generateDummyBearer = (isoDate: string) => {
   const t1 = isoDate.substring(0, 13);
   let t2 = Number(isoDate.substring(14, 16));
   t2 = t2 - (t2 % 5);
   return `Bearer ${md5(`${process.env.REACT_APP_BS}${t1}${t2}`)}`;
 };
 
-fetchCurrentDate();
-setInterval(fetchCurrentDate, 1000 * 60);
+fetchServerDate();
 
 export const getDummyBearer = async () => {
   const currentDate = await getCurrentDate();
